@@ -1,66 +1,67 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { runOnJS, useDerivedValue } from "react-native-reanimated";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { runOnJS, useDerivedValue } from 'react-native-reanimated';
 
-import { ItemRenderer } from "./ItemRenderer";
-import { ScrollViewGesture } from "./ScrollViewGesture";
+import { useAutoPlay } from '../hooks/useAutoPlay';
+import { useCarouselController } from '../hooks/useCarouselController';
+import { useCommonVariables } from '../hooks/useCommonVariables';
+import { useInitProps } from '../hooks/useInitProps';
+import { useLayoutConfig } from '../hooks/useLayoutConfig';
+import { useOnProgressChange } from '../hooks/useOnProgressChange';
+import { usePropsErrorBoundary } from '../hooks/usePropsErrorBoundary';
+import { CTX } from '../store';
+import type { ICarouselInstance, TCarouselProps } from '../types';
+import { computedRealIndexWithAutoFillData } from '../utils/computed-with-auto-fill-data';
 
-import { useAutoPlay } from "../hooks/useAutoPlay";
-import { useCarouselController } from "../hooks/useCarouselController";
-import { useCommonVariables } from "../hooks/useCommonVariables";
-import { useInitProps } from "../hooks/useInitProps";
-import { useLayoutConfig } from "../hooks/useLayoutConfig";
-import { useOnProgressChange } from "../hooks/useOnProgressChange";
-import { usePropsErrorBoundary } from "../hooks/usePropsErrorBoundary";
-import { CTX } from "../store";
-import type { ICarouselInstance, TCarouselProps } from "../types";
-import { computedRealIndexWithAutoFillData } from "../utils/computed-with-auto-fill-data";
+import { ItemRenderer } from './ItemRenderer';
+import { ScrollViewGesture } from './ScrollViewGesture';
 
-const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
+const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps>(
   (_props, ref) => {
     const props = useInitProps(_props);
 
     const {
-      testID,
-      loop,
       autoFillData,
+      loop,
+      testID,
       // Fill data with autoFillData
       data,
       // Length of fill data
       dataLength,
       // Length of raw data
-      rawDataLength,
-      mode,
-      style,
-      width,
-      height,
-      vertical,
       autoPlay,
-      windowSize,
-      autoPlayReverse,
       autoPlayInterval,
-      scrollAnimationDuration,
-      withAnimation,
-      fixedDirection,
-      renderItem,
-      onScrollEnd,
-      onSnapToItem,
-      onScrollStart,
-      onProgressChange,
+      autoPlayReverse,
       customAnimation,
       defaultIndex,
+      fixedDirection,
+      height,
+      mode,
+      onProgressChange,
+      onScrollEnd,
+      onScrollStart,
+      onSnapToItem,
+      rawDataLength,
+      renderItem,
+      scrollAnimationDuration,
+      style,
+      vertical,
+      width,
+      windowSize,
+      withAnimation,
     } = props;
 
     const commonVariables = useCommonVariables(props);
-    const { size, handlerOffset } = commonVariables;
+    const { handlerOffset, size } = commonVariables;
 
     const offsetX = useDerivedValue(() => {
       const totalSize = size * dataLength;
       const x = handlerOffset.value % totalSize;
 
-      if (!loop)
+      if (!loop) {
         return handlerOffset.value;
+      }
 
       return isNaN(x) ? 0 : x;
     }, [loop, size, dataLength]);
@@ -69,30 +70,32 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     useOnProgressChange({
       autoFillData,
       loop,
-      size,
       offsetX,
-      rawDataLength,
       onProgressChange,
+      rawDataLength,
+      size,
     });
 
     const carouselController = useCarouselController({
-      loop,
-      size,
-      dataLength,
       autoFillData,
-      handlerOffset,
-      withAnimation,
+      dataLength,
       defaultIndex,
-      fixedDirection,
       duration: scrollAnimationDuration,
-      onScrollEnd: () => runOnJS(_onScrollEnd)(),
+      fixedDirection,
+      handlerOffset,
+      loop,
+      onScrollEnd: () => {
+        runOnJS(_onScrollEnd)();
+      },
       onScrollStart: () => !!onScrollStart && runOnJS(onScrollStart)(),
+      size,
+      withAnimation,
     });
 
-    const { next, prev, scrollTo, getSharedIndex, getCurrentIndex }
-            = carouselController;
+    const { getCurrentIndex, getSharedIndex, next, prev, scrollTo } =
+      carouselController;
 
-    const { start: startAutoPlay, pause: pauseAutoPlay } = useAutoPlay({
+    const { pause: pauseAutoPlay, start: startAutoPlay } = useAutoPlay({
       autoPlay,
       autoPlayInterval,
       autoPlayReverse,
@@ -103,17 +106,19 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       const _sharedIndex = Math.round(getSharedIndex());
 
       const realIndex = computedRealIndexWithAutoFillData({
-        index: _sharedIndex,
-        dataLength: rawDataLength,
-        loop,
         autoFillData,
+        dataLength: rawDataLength,
+        index: _sharedIndex,
+        loop,
       });
 
-      if (onSnapToItem)
+      if (onSnapToItem) {
         onSnapToItem(realIndex);
+      }
 
-      if (onScrollEnd)
+      if (onScrollEnd) {
         onScrollEnd(realIndex);
+      }
     }, [
       loop,
       autoFillData,
@@ -144,9 +149,9 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
     React.useImperativeHandle(
       ref,
       () => ({
+        getCurrentIndex,
         next,
         prev,
-        getCurrentIndex,
         scrollTo,
       }),
       [getCurrentIndex, next, prev, scrollTo],
@@ -156,41 +161,39 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
 
     return (
       <GestureHandlerRootView>
-        <CTX.Provider value={{ props, common: commonVariables }}>
+        <CTX.Provider value={{ common: commonVariables, props }}>
           <ScrollViewGesture
             key={mode}
+            onScrollEnd={scrollViewGestureOnScrollEnd}
+            onScrollStart={scrollViewGestureOnScrollStart}
+            onTouchBegin={scrollViewGestureOnTouchBegin}
+            onTouchEnd={scrollViewGestureOnTouchEnd}
             size={size}
-            translation={handlerOffset}
             style={[
               styles.container,
               {
-                width: width || "100%",
-                height: height || "100%",
+                height: height || '100%',
+                width: width || '100%',
               },
               style,
-              vertical
-                ? styles.itemsVertical
-                : styles.itemsHorizontal,
+              vertical ? styles.itemsVertical : styles.itemsHorizontal,
             ]}
             testID={testID}
-            onScrollStart={scrollViewGestureOnScrollStart}
-            onScrollEnd={scrollViewGestureOnScrollEnd}
-            onTouchBegin={scrollViewGestureOnTouchBegin}
-            onTouchEnd={scrollViewGestureOnTouchEnd}
+            translation={handlerOffset}
           >
             <ItemRenderer
+              autoFillData={autoFillData}
+              customAnimation={customAnimation}
               data={data}
               dataLength={dataLength}
-              rawDataLength={rawDataLength}
-              loop={loop}
-              size={size}
-              windowSize={windowSize}
-              autoFillData={autoFillData}
-              offsetX={offsetX}
               handlerOffset={handlerOffset}
               layoutConfig={layoutConfig}
+              loop={loop}
+              offsetX={offsetX}
+              rawDataLength={rawDataLength}
               renderItem={renderItem}
-              customAnimation={customAnimation}
+              size={size}
+              windowSize={windowSize}
             />
           </ScrollViewGesture>
         </CTX.Provider>
@@ -199,18 +202,20 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
   },
 );
 
-export default Carousel as <T extends any>(
-  props: React.PropsWithChildren<TCarouselProps<T>>
+Carousel.displayName = 'Carousel';
+
+export default Carousel as <T>(
+  props: React.PropsWithChildren<TCarouselProps<T>>,
 ) => React.ReactElement;
 
 const styles = StyleSheet.create({
   container: {
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   itemsHorizontal: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   itemsVertical: {
-    flexDirection: "column",
+    flexDirection: 'column',
   },
 });

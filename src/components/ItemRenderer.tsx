@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import React from 'react';
 import type { ViewStyle } from 'react-native';
-import type Animated from 'react-native-reanimated';
 import {
   type AnimatedStyle,
   runOnJS,
@@ -22,7 +21,7 @@ interface Props {
   customAnimation?: (value: number) => AnimatedStyle<ViewStyle>;
   data: any[];
   dataLength: number;
-  handlerOffset: Animated.SharedValue<number>;
+  handlerOffset: SharedValue<number>;
   layoutConfig: TAnimationStyle;
   loop: boolean;
   offsetX: SharedValue<number>;

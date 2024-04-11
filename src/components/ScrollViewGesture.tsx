@@ -10,6 +10,7 @@ import Animated, {
   cancelAnimation,
   measure,
   runOnJS,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useDerivedValue,
@@ -32,7 +33,7 @@ interface Props {
   size: number;
   style?: StyleProp<ViewStyle>;
   testID?: string;
-  translation: Animated.SharedValue<number>;
+  translation: SharedValue<number>;
 }
 
 const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {

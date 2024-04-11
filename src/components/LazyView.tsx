@@ -1,15 +1,16 @@
-import type { PropsWithChildren } from "react";
-import React from "react";
+import type { PropsWithChildren } from 'react';
+import type React from 'react';
 
 interface Props {
-  shouldUpdate: boolean
+  shouldUpdate: boolean;
 }
 
-export const LazyView: React.FC<PropsWithChildren<Props>> = (props) => {
-  const { shouldUpdate, children } = props;
+export const LazyView: React.FC<PropsWithChildren<Props>> = props => {
+  const { children, shouldUpdate } = props;
 
-  if (!shouldUpdate)
+  if (!shouldUpdate) {
     return <></>;
+  }
 
   return <>{children}</>;
 };
