@@ -12,15 +12,15 @@
     "src"
   ],
   "scripts": {
+    "clean": "del-cli lib",
+    "dev": "watch 'yarn prepare' ./src",
     "gif": "node scripts/makegif.js ./scripts/gif-works-directory",
+    "lint": "eslint 'src/**/*.{js,ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix",
+    "prepare": "bob build",
     "test": "jest run src/**/*",
     "test:dev": "jest dev src/**/* --watch",
     "typescript": "tsc --noEmit",
-    "lint": "eslint 'src/**/*.{js,ts,tsx}'",
-    "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix",
-    "dev": "watch 'yarn prepare' ./src",
-    "prepare": "bob build",
-    "clean": "del-cli lib",
     "version": "changeset version"
   },
   "keywords": [
@@ -28,10 +28,7 @@
     "ios",
     "android"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dohooo/react-native-reanimated-carousel.git"
-  },
+  "repository": "dohooo/react-native-reanimated-carousel",
   "author": "Doho <zhaodonghao586@outlook.com> (https://github.com/dohooo)",
   "license": "MIT",
   "bugs": {
@@ -84,7 +81,7 @@
     "react-native": "0.72.3",
     "react-native-builder-bob": "^0.18.1",
     "react-native-gesture-handler": "~2.12.0",
-    "react-native-reanimated": "~3.3.0",
+    "react-native-reanimated": "3.8.1",
     "react-test-renderer": "^18.2.0",
     "sponsorkit": "^0.1.3",
     "typescript": "^4.0.8",

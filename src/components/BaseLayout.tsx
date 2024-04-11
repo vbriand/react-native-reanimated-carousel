@@ -1,85 +1,82 @@
-import React from "react";
-import type { ViewStyle } from "react-native";
-import type { AnimatedStyleProp } from "react-native-reanimated";
+import React from 'react';
+import type { ViewStyle } from 'react-native';
+import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
 
-import type { IOpts } from "../hooks/useOffsetX";
-import { useOffsetX } from "../hooks/useOffsetX";
-import type { IVisibleRanges } from "../hooks/useVisibleRanges";
-import type { ILayoutConfig } from "../layouts/stack";
-import { CTX } from "../store";
+import type { IOpts } from '../hooks/useOffsetX';
+import { useOffsetX } from '../hooks/useOffsetX';
+import type { IVisibleRanges } from '../hooks/useVisibleRanges';
+import type { ILayoutConfig } from '../layouts/stack';
+import { CTX } from '../store';
 
-export type TAnimationStyle = (value: number) => AnimatedStyleProp<ViewStyle>;
+export type TAnimationStyle = (value: number) => AnimatedStyle<ViewStyle>;
 
 export const BaseLayout: React.FC<{
-  index: number
-  handlerOffset: Animated.SharedValue<number>
-  visibleRanges: IVisibleRanges
-  animationStyle: TAnimationStyle
+  animationStyle: TAnimationStyle;
   children: (ctx: {
-    animationValue: Animated.SharedValue<number>
-  }) => React.ReactElement
-}> = (props) => {
-  const { handlerOffset, index, children, visibleRanges, animationStyle }
-    = props;
+    animationValue: SharedValue<number>;
+  }) => React.ReactElement;
+  handlerOffset: SharedValue<number>;
+  index: number;
+  visibleRanges: IVisibleRanges;
+}> = props => {
+  const { animationStyle, children, handlerOffset, index, visibleRanges } =
+    props;
 
   const context = React.useContext(CTX);
   const {
     props: {
-      loop,
-      dataLength,
-      width,
-      height,
-      vertical,
       customConfig,
+      dataLength,
+      height,
+      loop,
       mode,
       modeConfig,
+      vertical,
+      width,
     },
   } = context;
   const size = vertical ? height : width;
 
   let offsetXConfig: IOpts = {
+    dataLength,
     handlerOffset,
     index,
-    size,
-    dataLength,
     loop,
-    ...(typeof customConfig === "function" ? customConfig() : {}),
+    size,
+    ...(typeof customConfig === 'function' ? customConfig() : {}),
   };
 
-  if (mode === "horizontal-stack") {
-    const { snapDirection, showLength } = modeConfig as ILayoutConfig;
+  if (mode === 'horizontal-stack') {
+    const { showLength, snapDirection } = modeConfig as ILayoutConfig;
 
     offsetXConfig = {
+      dataLength,
       handlerOffset,
       index,
-      size,
-      dataLength,
       loop,
-      type: snapDirection === "right" ? "negative" : "positive",
+      size,
+      type: snapDirection === 'right' ? 'negative' : 'positive',
       viewCount: showLength,
     };
   }
 
   const x = useOffsetX(offsetXConfig, visibleRanges);
   const animationValue = useDerivedValue(() => x.value / size, [x, size]);
-  const animatedStyle = useAnimatedStyle(
-    () => {
-      return animationStyle(x.value / size);
-    },
-    [animationStyle],
-  );
+  const animatedStyle = useAnimatedStyle(() => {
+    return animationStyle(x.value / size) as ViewStyle;
+  }, [animationStyle]);
 
   return (
     <Animated.View
       style={[
         {
-          width: width || "100%",
-          height: height || "100%",
-          position: "absolute",
+          height: height || '100%',
+          position: 'absolute',
+          width: width || '100%',
         },
         animatedStyle,
       ]}
