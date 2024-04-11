@@ -1,0 +1,1 @@
+{"version":3,"file":"LazyView.d.ts","sourceRoot":"","sources":["../../../src/components/LazyView.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,iBAAiB,EAAE,MAAM,OAAO,CAAC;AAC/C,OAAO,KAAK,KAAK,MAAM,OAAO,CAAC;AAE/B,UAAU,KAAK;IACb,YAAY,EAAE,OAAO,CAAC;CACvB;AAED,eAAO,MAAM,QAAQ,EAAE,KAAK,CAAC,EAAE,CAAC,iBAAiB,CAAC,KAAK,CAAC,CAQvD,CAAC"}

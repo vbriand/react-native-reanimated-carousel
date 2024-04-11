@@ -1,0 +1,1 @@
+{"version":3,"names":["computeOffsetIfSizeChanged","params","handlerOffset","prevSize","size"],"sourceRoot":"../../../src","sources":["utils/compute-offset-if-size-changed.ts"],"mappings":"AAAA,OAAO,SAASA,0BAA0BA,CAACC,MAI1C,EAAE;EACD,SAAS;;EACT,MAAM;IAAEC,aAAa;IAAEC,QAAQ;IAAEC;EAAK,CAAC,GAAGH,MAAM;EAEhD,OAAOC,aAAa,GAAGC,QAAQ,GAAGC,IAAI;AACxC","ignoreList":[]}

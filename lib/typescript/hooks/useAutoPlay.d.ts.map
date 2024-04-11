@@ -1,0 +1,1 @@
+{"version":3,"file":"useAutoPlay.d.ts","sourceRoot":"","sources":["../../../src/hooks/useAutoPlay.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,mBAAmB,EAAE,MAAM,yBAAyB,CAAC;AAEnE,wBAAgB,WAAW,CAAC,IAAI,EAAE;IAChC,QAAQ,CAAC,EAAE,OAAO,CAAA;IAClB,gBAAgB,CAAC,EAAE,MAAM,CAAA;IACzB,eAAe,CAAC,EAAE,OAAO,CAAA;IACzB,kBAAkB,EAAE,mBAAmB,CAAA;CACxC;;;EAqDA"}
