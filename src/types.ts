@@ -1,4 +1,4 @@
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { AccessibilityProps, StyleProp, ViewStyle } from 'react-native';
 import type { PanGesture } from 'react-native-gesture-handler';
 import type {
   AnimatedStyle,
@@ -6,7 +6,6 @@ import type {
   WithSpringConfig,
   WithTimingConfig,
 } from 'react-native-reanimated';
-import type Animated from 'react-native-reanimated';
 
 import type { TParallaxModeProps } from './layouts/parallax';
 import type { TStackModeProps } from './layouts/stack';
@@ -60,7 +59,7 @@ export interface WithTimingAnimation {
 
 export type WithAnimation = WithSpringAnimation | WithTimingAnimation;
 
-export type TCarouselProps<T = any> = {
+export type TCarouselProps<T = any> = AccessibilityProps & {
   /**
    * Auto fill data array to allow loop playback when the loop props is true.
    * @default true
@@ -120,7 +119,7 @@ export type TCarouselProps<T = any> = {
    * @experimental This API will be changed in the future.
    * If positive, the carousel will scroll to the positive direction and vice versa.
    * */
-  fixedDirection?: 'positive' | 'negative';
+  fixedDirection?: 'negative' | 'positive';
   /**
    * Carousel loop playback.
    * @default true
@@ -230,7 +229,7 @@ export interface ICarouselInstance {
 }
 
 export interface CarouselRenderItemInfo<ItemT> {
-  animationValue: Animated.SharedValue<number>;
+  animationValue: SharedValue<number>;
   index: number;
   item: ItemT;
 }

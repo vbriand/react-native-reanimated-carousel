@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import React, { useCallback } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { AccessibilityProps, StyleProp, ViewStyle } from 'react-native';
 import type {
   GestureStateChangeEvent,
   PanGestureHandlerEventPayload,
@@ -25,7 +25,10 @@ import type { WithTimingAnimation } from '../types';
 import { dealWithAnimation } from '../utils/deal-with-animation';
 
 interface Props {
+  accessibilityActions: AccessibilityProps['accessibilityActions'];
+  accessibilityLabel: AccessibilityProps['accessibilityLabel'];
   infinite?: boolean;
+  onAccessibilityAction: AccessibilityProps['onAccessibilityAction'];
   onScrollEnd?: () => void;
   onScrollStart?: () => void;
   onTouchBegin?: () => void;
@@ -56,6 +59,9 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
   } = React.useContext(CTX);
 
   const {
+    accessibilityActions,
+    accessibilityLabel,
+    onAccessibilityAction,
     onScrollEnd,
     onScrollStart,
     onTouchBegin,
@@ -482,6 +488,10 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View
+        accessibilityActions={accessibilityActions}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="adjustable"
+        onAccessibilityAction={onAccessibilityAction}
         onTouchEnd={onTouchEnd}
         onTouchStart={onTouchBegin}
         ref={containerRef}

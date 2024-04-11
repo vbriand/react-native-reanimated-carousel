@@ -30,6 +30,8 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps>(
       // Length of fill data
       dataLength,
       // Length of raw data
+      accessibilityActions,
+      accessibilityLabel,
       autoPlay,
       autoPlayInterval,
       autoPlayReverse,
@@ -38,6 +40,7 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps>(
       fixedDirection,
       height,
       mode,
+      onAccessibilityAction,
       onProgressChange,
       onScrollEnd,
       onScrollStart,
@@ -163,7 +166,10 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps>(
       <GestureHandlerRootView>
         <CTX.Provider value={{ common: commonVariables, props }}>
           <ScrollViewGesture
+            accessibilityActions={accessibilityActions}
+            accessibilityLabel={accessibilityLabel}
             key={mode}
+            onAccessibilityAction={onAccessibilityAction}
             onScrollEnd={scrollViewGestureOnScrollEnd}
             onScrollStart={scrollViewGestureOnScrollStart}
             onTouchBegin={scrollViewGestureOnTouchBegin}
