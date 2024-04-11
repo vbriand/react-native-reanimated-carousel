@@ -96,7 +96,7 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
     }
 
     return dataLength * size;
-  }, [loop, size, dataLength, overscrollEnabled]);
+  }, [loop, size, dataLength, overscrollEnabled, containerRef]);
 
   const withSpring = React.useCallback(
     (toValue: number, onFinished?: () => void) => {
@@ -195,17 +195,19 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
       }
     },
     [
-      withSpring,
-      size,
-      maxPage,
-      loop,
-      snapEnabled,
       translation,
-      pagingEnabled,
       scrollEndVelocity.value,
-      maxScrollDistancePerSwipe,
-      scrollEndTranslation.value,
       maxScrollDistancePerSwipeIsSet,
+      scrollEndTranslation.value,
+      maxScrollDistancePerSwipe,
+      pagingEnabled,
+      snapEnabled,
+      size,
+      loop,
+      withSpring,
+      maxPage,
+      overscrollEnabled,
+      getLimit,
     ],
   );
 
@@ -283,18 +285,21 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
     [pagingEnabled, resetBoundary],
   );
 
-  function withProcessTranslation(translation: number) {
-    'worklet';
+  const withProcessTranslation = useCallback(
+    (translation: number) => {
+      'worklet';
 
-    if (!loop && !overscrollEnabled) {
-      const limit = getLimit();
-      const sign = Math.sign(translation);
+      if (!loop && !overscrollEnabled) {
+        const limit = getLimit();
+        const sign = Math.sign(translation);
 
-      return sign * Math.max(0, Math.min(limit, Math.abs(translation)));
-    }
+        return sign * Math.max(0, Math.min(limit, Math.abs(translation)));
+      }
 
-    return translation;
-  }
+      return translation;
+    },
+    [getLimit, loop, overscrollEnabled],
+  );
 
   const onGestureStart = useCallback(
     (_: PanGestureHandlerEventPayload) => {
@@ -367,7 +372,6 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
       max,
       panOffset,
       loop,
-      overscrollEnabled,
       fixedDirection,
       translation,
       validStart,
@@ -446,22 +450,23 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = props => {
       }
     },
     [
-      size,
-      loop,
-      touching,
-      panOffset,
-      translation,
-      isHorizontal,
       scrollEndVelocity,
-      scrollEndTranslation,
+      isHorizontal.value,
       fixedDirection,
+      scrollEndTranslation,
       maxScrollDistancePerSwipeIsSet,
       maxScrollDistancePerSwipe,
-      maxScrollDistancePerSwipeIsSet,
+      minScrollDistancePerSwipeIsSet,
       minScrollDistancePerSwipe,
-      endWithSpring,
+      loop,
+      panOffset.value,
+      size,
+      translation,
       withSpring,
+      withProcessTranslation,
       onScrollEnd,
+      endWithSpring,
+      touching,
     ],
   );
 

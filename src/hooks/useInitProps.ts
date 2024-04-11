@@ -1,79 +1,77 @@
-import React from "react";
+import React from 'react';
 
-import type { TCarouselProps } from "../types";
-import { computedFillDataWithAutoFillData } from "../utils/computed-with-auto-fill-data";
+import type { TCarouselProps } from '../types';
+import { computedFillDataWithAutoFillData } from '../utils/computed-with-auto-fill-data';
 
 type TGetRequiredProps<P extends keyof TCarouselProps> = Record<
-P,
-Required<TCarouselProps>[P]
+  P,
+  Required<TCarouselProps>[P]
 >;
 
 export type TInitializeCarouselProps<T> = TCarouselProps<T> &
-TGetRequiredProps<
-| "defaultIndex"
-| "loop"
-| "width"
-| "height"
-| "scrollAnimationDuration"
-| "autoPlayInterval"
-| "autoFillData"
-> & {
-  // Raw data that has not been processed
-  rawData: T[]
-  dataLength: number
-  rawDataLength: number
-};
+  TGetRequiredProps<
+    | 'autoFillData'
+    | 'autoPlayInterval'
+    | 'defaultIndex'
+    | 'height'
+    | 'loop'
+    | 'scrollAnimationDuration'
+    | 'width'
+  > & {
+    dataLength: number;
+    // Raw data that has not been processed
+    rawData: T[];
+    rawDataLength: number;
+  };
 
 export function useInitProps<T>(
   props: TCarouselProps<T>,
 ): TInitializeCarouselProps<T> {
   const {
-    defaultIndex = 0,
-    data: rawData = [],
-    loop = true,
+    autoFillData = true,
     autoPlayInterval: _autoPlayInterval = 1000,
+    data: rawData = [],
+    defaultIndex = 0,
+    loop = true,
     scrollAnimationDuration = 500,
     style = {},
-    autoFillData = true,
     // switchers
     enabled = true,
-    pagingEnabled = true,
-    overscrollEnabled = true,
-    snapEnabled = props.enableSnap ?? true,
-    width: _width,
     height: _height,
+    overscrollEnabled = true,
+    pagingEnabled = true,
+    snapEnabled = props.snapEnabled ?? true,
+    width: _width,
   } = props;
 
   const width = Math.round(_width || 0);
   const height = Math.round(_height || 0);
   const autoPlayInterval = Math.max(_autoPlayInterval, 0);
 
-  const data = React.useMemo<T[]>(
-    () => {
-      return computedFillDataWithAutoFillData<T>({
-        loop,
-        autoFillData,
-        data: rawData,
-        dataLength: rawData.length,
-      });
-    },
-    [rawData, loop, autoFillData],
-  );
+  const data = React.useMemo<T[]>(() => {
+    return computedFillDataWithAutoFillData<T>({
+      autoFillData,
+      data: rawData,
+      dataLength: rawData.length,
+      loop,
+    });
+  }, [rawData, loop, autoFillData]);
 
   const dataLength = data.length;
   const rawDataLength = rawData.length;
 
-  if (props.mode === "vertical-stack" || props.mode === "horizontal-stack") {
-    if (!props.modeConfig)
+  if (props.mode === 'vertical-stack' || props.mode === 'horizontal-stack') {
+    if (!props.modeConfig) {
       props.modeConfig = {};
+    }
 
-    props.modeConfig.showLength = props.modeConfig?.showLength ?? dataLength - 1;
+    props.modeConfig.showLength = props.modeConfig.showLength ?? dataLength - 1;
   }
 
   return {
     ...props,
-    defaultIndex,
     autoFillData,
+    defaultIndex,
     // Fill data with autoFillData
     data,
     // Length of fill data
@@ -81,16 +79,16 @@ export function useInitProps<T>(
     // Raw data that has not been processed
     rawData,
     // Length of raw data
-    rawDataLength,
-    loop,
-    enabled,
     autoPlayInterval,
-    scrollAnimationDuration,
-    style,
-    pagingEnabled,
-    snapEnabled,
-    overscrollEnabled,
-    width,
+    enabled,
     height,
+    loop,
+    overscrollEnabled,
+    pagingEnabled,
+    rawDataLength,
+    scrollAnimationDuration,
+    snapEnabled,
+    style,
+    width,
   };
 }
