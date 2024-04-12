@@ -1,4 +1,4 @@
-import type { StyleProp, ViewStyle } from "react-native";
+import type { AccessibilityProps, StyleProp, ViewStyle } from "react-native";
 import type { PanGesture } from "react-native-gesture-handler";
 import type {
   AnimatedStyleProp,
@@ -60,7 +60,7 @@ export interface WithTimingAnimation {
 
 export type WithAnimation = WithSpringAnimation | WithTimingAnimation;
 
-export type TCarouselProps<T = any> = {
+export type TCarouselProps<T = any> = AccessibilityProps & {
   ref?: React.Ref<ICarouselInstance>
   /**
       * The default animated value of the carousel.
