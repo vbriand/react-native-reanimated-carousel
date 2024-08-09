@@ -1,0 +1,1 @@
+{"version":3,"names":["_Basic","require","Pagination","exports","Basic"],"sources":["index.tsx"],"sourcesContent":["import { Basic } from \"./Basic\";\n\nexport const Pagination = {\n  Basic,\n};\n"],"mappings":";;;;;;AAAA,IAAAA,MAAA,GAAAC,OAAA;AAEO,MAAMC,UAAU,GAAAC,OAAA,CAAAD,UAAA,GAAG;EACxBE,KAAK,EAALA;AACF,CAAC","ignoreList":[]}
