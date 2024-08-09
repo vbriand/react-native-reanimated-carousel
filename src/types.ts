@@ -1,4 +1,4 @@
-import type { StyleProp, ViewStyle } from "react-native";
+import type { AccessibilityProps, StyleProp, ViewStyle } from "react-native";
 import type { PanGesture } from "react-native-gesture-handler";
 import type {
   AnimatedStyleProp,
@@ -210,7 +210,7 @@ export type TCarouselProps<T = any> = {
       * @deprecated please use snapEnabled instead
       */
   enableSnap?: boolean
-} & (TParallaxModeProps | TStackModeProps);
+} & (TParallaxModeProps | TStackModeProps) & AccessibilityProps;
 
 export interface ICarouselInstance {
   /**

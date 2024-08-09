@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import React, { useCallback } from "react";
-import type { StyleProp, ViewStyle } from "react-native";
+import type { AccessibilityProps, StyleProp, ViewStyle } from "react-native";
 import type { GestureStateChangeEvent, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
 import { GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -20,7 +20,7 @@ import { CTX } from "../store";
 import type { WithTimingAnimation } from "../types";
 import { dealWithAnimation } from "../utils/deal-with-animation";
 
-interface Props {
+interface Props extends AccessibilityProps {
   size: number
   infinite?: boolean
   testID?: string
@@ -60,6 +60,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
     onScrollEnd,
     onTouchBegin,
     onTouchEnd,
+    accessibilityActions,
+    accessibilityLabel,
+    accessibilityRole,
+    accessible,
+    onAccessibilityAction,
   } = props;
 
   const maxPage = dataLength;
@@ -451,6 +456,11 @@ const IScrollViewGesture: React.FC<PropsWithChildren<Props>> = (props) => {
         style={style}
         onTouchStart={onTouchBegin}
         onTouchEnd={onTouchEnd}
+        accessibilityActions={accessibilityActions}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole={accessibilityRole}
+        accessible={accessible}
+        onAccessibilityAction={onAccessibilityAction}
       >
         {props.children}
       </Animated.View>

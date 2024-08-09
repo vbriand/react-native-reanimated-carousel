@@ -50,6 +50,11 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
       onProgressChange,
       customAnimation,
       defaultIndex,
+      accessibilityActions,
+      accessibilityLabel,
+      accessibilityRole,
+      accessible,
+      onAccessibilityAction,
     } = props;
 
     const commonVariables = useCommonVariables(props);
@@ -173,6 +178,11 @@ const Carousel = React.forwardRef<ICarouselInstance, TCarouselProps<any>>(
             onScrollEnd={scrollViewGestureOnScrollEnd}
             onTouchBegin={scrollViewGestureOnTouchBegin}
             onTouchEnd={scrollViewGestureOnTouchEnd}
+            accessibilityActions={accessibilityActions}
+            accessibilityLabel={accessibilityLabel}
+            accessibilityRole={accessibilityRole}
+            accessible={accessible}
+            onAccessibilityAction={onAccessibilityAction}
           >
             <ItemRenderer
               data={data}
