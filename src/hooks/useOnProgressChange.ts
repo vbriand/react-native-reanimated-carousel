@@ -19,6 +19,12 @@ export function useOnProgressChange(
   const { autoFillData, loop, offsetX, size, rawDataLength, onProgressChange }
         = opts;
 
+  // remember `isFunc` here because we can't accurately check typeof
+  // from within useAnimatedReaction because its code has been workletized;
+  // the `onProgressChange` value will be typeof "object" from within
+  // the worklet code even if it's a function.
+  const isFunc = typeof onProgressChange === "function";
+
   useAnimatedReaction(
     () => offsetX.value,
     (_value) => {
@@ -42,8 +48,13 @@ export function useOnProgressChange(
       if (value > 0)
         absoluteProgress = rawDataLength - absoluteProgress;
 
-      if (onProgressChange)
-        runOnJS(onProgressChange)(value, absoluteProgress);
+      if (onProgressChange) {
+        if (isFunc)
+          runOnJS(onProgressChange)(value, absoluteProgress);
+
+        else
+          onProgressChange.value = absoluteProgress;
+      }
     },
     [loop, autoFillData, rawDataLength, onProgressChange],
   );
